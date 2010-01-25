@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+
+# TODO 1: add-as-submodule <directory>
+
+# walk up from <directory>, looking for next git dir.  add <directory>, <origin>
+# as submodule to index.

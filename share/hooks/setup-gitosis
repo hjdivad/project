@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+
+# TODO 1: setup-gitosis <name>
+#
+#
+# TODO 1: edit gitosis.conf, find entry [group projects], edit writable to
+# include davidjh/projects/<name>
+#
+# TODO 1: commit gitosis.conf, push
+#
+#
+# TODO 1: add origin as remote if it doesn't already exist
+# 			and have master track origin/master
+#
+# TODO 1: finally, push to origin

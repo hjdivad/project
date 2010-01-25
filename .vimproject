@@ -1,0 +1,14 @@
+mithc=$PWD CD="." filter="*" {
+ bin=bin {
+  project
+ }
+ doc=doc{
+ }
+ share=share{
+  hooks=hooks{
+  }
+ }
+ Rakefile
+}
+
+ vim:wfw fdl=1:
