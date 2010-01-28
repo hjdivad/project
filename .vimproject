@@ -3,9 +3,12 @@ mithc=$PWD CD="." filter="*" {
   project
  }
  doc=doc{
+  description
  }
  share=share{
   hooks=hooks{
+   add-as-submodule
+   setup-gitosis
   }
  }
  Rakefile

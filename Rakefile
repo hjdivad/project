@@ -26,6 +26,3 @@ task :install do
 	FileUtils.cp_r Dir["#{__DIR__}/share/*"], InstallShareDir
 end
 
-
-# TODO 1: bin/command-completion-for-project
-

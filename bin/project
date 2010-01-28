@@ -30,7 +30,10 @@ end
 
 def command!( args )
 
-	print_usage and exit 1 if args.empty?
+	if args.empty?
+		print_usage
+		exit 1
+	end
 	exit 1  unless requirements_met?
 
 

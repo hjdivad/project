@@ -1,0 +1,16 @@
+#!/bin/bash
+
+if [ -n "`which project`" ]; then
+	function __command_completion_for_project {
+		current=${COMP_WORDS[COMP_CWORD]}
+		completions=''
+		if [ "$COMP_CWORD" = "2" ]; then
+			completions=`ls $HOME/local/share/project/templates`
+		fi
+		COMPREPLY=( $( compgen -W "$completions" -- $current ) )	
+
+		unset current completions
+		return 0
+	}
+	complete -F __command_completion_for_project project 
+fi
