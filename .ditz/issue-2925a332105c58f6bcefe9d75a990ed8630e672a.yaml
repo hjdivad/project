@@ -1,0 +1,20 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: impl-gitosis-add
+desc: Impl gitosis-add.
+type: :feature
+component: project
+release: 
+reporter: David J. Hamilton <project@hjdivad.com>
+status: :unstarted
+disposition: 
+creation_time: 2010-04-27 22:13:35.334245 Z
+references: []
+
+id: 2925a332105c58f6bcefe9d75a990ed8630e672a
+log_events: 
+- - 2010-04-27 22:13:35.334495 Z
+  - David J. Hamilton <project@hjdivad.com>
+  - created
+  - ""
+git_branch: 
+claimer: 

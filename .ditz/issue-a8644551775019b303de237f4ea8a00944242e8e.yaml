@@ -1,0 +1,20 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: impl-create
+desc: Impl create.
+type: :feature
+component: project
+release: 
+reporter: David J. Hamilton <project@hjdivad.com>
+status: :unstarted
+disposition: 
+creation_time: 2010-04-27 22:13:02.396770 Z
+references: []
+
+id: a8644551775019b303de237f4ea8a00944242e8e
+log_events: 
+- - 2010-04-27 22:13:02.397023 Z
+  - David J. Hamilton <project@hjdivad.com>
+  - created
+  - ""
+git_branch: 
+claimer: 

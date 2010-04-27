@@ -1,0 +1,20 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: impl-submodulize
+desc: Impl submodulize.
+type: :feature
+component: project
+release: 
+reporter: David J. Hamilton <project@hjdivad.com>
+status: :unstarted
+disposition: 
+creation_time: 2010-04-27 22:14:10.956773 Z
+references: []
+
+id: 7f9f0ffcd84b6990145594debcc8f3d3bb1b049d
+log_events: 
+- - 2010-04-27 22:14:10.957033 Z
+  - David J. Hamilton <project@hjdivad.com>
+  - created
+  - ""
+git_branch: 
+claimer: 

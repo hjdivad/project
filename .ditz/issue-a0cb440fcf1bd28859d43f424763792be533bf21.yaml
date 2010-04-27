@@ -1,0 +1,20 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: impl-gitosis-remove
+desc: Impl gitosis-remove.
+type: :feature
+component: project
+release: 
+reporter: David J. Hamilton <project@hjdivad.com>
+status: :unstarted
+disposition: 
+creation_time: 2010-04-27 22:13:54.738038 Z
+references: []
+
+id: a0cb440fcf1bd28859d43f424763792be533bf21
+log_events: 
+- - 2010-04-27 22:13:54.738297 Z
+  - David J. Hamilton <project@hjdivad.com>
+  - created
+  - ""
+git_branch: 
+claimer: 
