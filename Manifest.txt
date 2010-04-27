@@ -1,0 +1,10 @@
+History.txt
+lib/gitosis.rb
+lib/git.rb
+lib/basic.rb
+lib/project.rb
+bin/project
+share/project-completion
+Rakefile
+README.txt
+Manifest.txt

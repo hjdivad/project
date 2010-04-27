@@ -1,17 +1,23 @@
 mithc=$PWD CD="." filter="*" {
+ Rakefile
  bin=bin {
   project
+ }
+ lib=lib {
+  basic.rb
+  git.rb
+  gitosis.rb
+  project.rb
+  util.rb
  }
  doc=doc{
   description
  }
  share=share{
-  hooks=hooks{
-   add-as-submodule
-   setup-gitosis
-  }
+  project-completion
  }
- Rakefile
+ spec=spec {
+ }
 }
 
  vim:wfw fdl=1:
