@@ -17,7 +17,7 @@ module Project
 
 
 	SubCommands		= %w(
-		create remove gitosis-list gitosis-add gitosis-remove submodulize help
+		create remove gitosis-list gitosis-add gitosis-remove submodulize
 	)
 
 
@@ -32,6 +32,8 @@ module Project
 				Commands are:
 					#{SubCommands.join( "
 					")}
+
+				Run project COMMAND --help for command specific help.
 
 
 				Global options:
@@ -52,53 +54,24 @@ module Project
 			stop_on	SubCommands
 		end
 
+
 		cmd = ARGV.shift
 		cmd_opts = Trollop::options do
 			case cmd
 			when "create"
 			when "remove"
 			when "gitosis-list"
+				banner "
+					project gitosis-list [PATTERN]
+
+					List groups that match PATTERN, or have writables
+					that match PATTERN.  PATTERN defaults to '.*'.
+
+					Options:
+				".cleanup
 			when "gitosis-add"
 			when "gitosis-remove"
 			when "submodulize"
-			when "help"
-				help_cmd = ARGV.shift
-				help_output = case help_cmd
-					when "create"
-					when "remove"
-					when "gitosis-list"
-						"
-							project gitosis-list [PATTERN]
-
-							List groups that match PATTERN, or have writables
-							that match PATTERN.  PATTERN defaults to '.*'.
-						"
-					when "gitosis-add"
-					when "gitosis-remove"
-					when "submodulize"
-					when "help"
-						"
-							project help COMMAND
-
-							Provides help on projbect subcommand COMMAND.
-						"
-					else
-						if help_cmd.nil?
-							"
-								project help COMMAND
-
-								Provides help on projbect subcommand COMMAND.
-							"
-						else
-							"
-								Unknown command #{help_cmd}.  Try --help for a list
-								of commands.
-							"
-						end
-					end
-
-				puts( help_output.cleanup )
-				exit 0
 			else
 				Trollop::die "No command specified" if cmd.nil?
 				Trollop::die "Unknown command #{cmd}"
@@ -114,7 +87,6 @@ module Project
 		when "gitosis-add"
 		when "gitosis-remove"
 		when "submodulize"
-		when "help"
 		else
 			raise "Internal project error."
 		end
