@@ -1,0 +1,20 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Fixup project completion
+desc: Fixup old project completion and figure out how best to install.
+type: :task
+component: project
+release: 
+reporter: David J. Hamilton <project@hjdivad.com>
+status: :unstarted
+disposition: 
+creation_time: 2010-05-04 21:14:07.370781 Z
+references: []
+
+id: 9cae4187c3227b70d47bc62ae13863295795163d
+log_events: 
+- - 2010-05-04 21:14:07.371065 Z
+  - David J. Hamilton <project@hjdivad.com>
+  - created
+  - ""
+git_branch: 
+claimer: 
