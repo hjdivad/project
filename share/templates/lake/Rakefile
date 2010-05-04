@@ -1,0 +1,66 @@
+# Uncomment any of the below options to make local build changes
+
+# Specify a path to a script that generates pdfs from rdata files.  It must
+# accept one command line argument, which must be the path to the rdata file.
+# R_CREATE_GRAPHS = "path/to/script"
+
+# Specify files with figure extensions that the build system should ignore.  In
+# the example pattern, we just ignore all files in dir1 and dir2.
+# EXCLUDED_FIGURES = /.*\/?(dir1|dir2)\/.*/
+
+
+# Find Lake  # {{{
+
+dirs = Dir.pwd.split( "/" )
+lake_container = dirs.reverse.each_with_index do |d, ri|
+    i = dirs.size - ri - 1
+    path = dirs[0..i].join( "/" )
+
+	lake_container = nil
+	[ "lake", ".lake" ].each do |l|
+		break (
+			lake_container = "#{path}/#{l}" 
+		) if File.file? "#{path}/#{l}/Rakefile"
+	end
+	break lake_container if lake_container
+end
+raise(
+	LoadError, "Unable to find lake"
+) unless File.directory? lake_container
+
+# }}}
+
+
+ENV[ 'TEXINPUTS' ] = "#{lake_container}:#{ENV[ 'TEXINPUTS' ]}"
+load "#{lake_container}/Rakefile"
+
+# Set your own viewer method if you want to specify the commands to execute to
+# view the pdf.  Otherwise, an appropriate default will be selected.  
+# Example:
+#
+
+def viewer( pdf )
+	Process.fork do
+		ENV['DISPLAY'] = ':0.1'
+		exec "evince #{pdf}"
+	end if `lsof #{pdf}`.empty?
+end
+
+
+#
+# NOTE:  Your viewer definition *must* follow the load of 'lake/Rakefile'.
+
+# If your master latex source file's name is not "paper.tex", uncomment the
+# following line and set $paper to that name.
+# $paper = 'your_master_latex_file'
+
+# Specify a path for latex's package lookup.  Be sure that the path end with
+# '::' to ensure the default path is also searched.  Here we assume that
+# ENV['TEXINPUTS'] ends with ::.
+#ENV['TEXINPUTS'] = 'lake:lake/packages/ucthesis::' + ENV['TEXINPUTS']
+
+# Specify a path for bibtex style files
+# As with ENV['TEXINPUTS'] above, we assume that ENV['BSTINPUTS'] ends with ::
+# so that bibtex searches the global directories for bibtex style files.
+#ENV['BSTINPUTS'] = 'lake:lake/packages/ucthesis:' + ENV['BSTINPUTS']
+

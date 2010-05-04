@@ -2,18 +2,22 @@
 
 require 'trollop'
 
-require 'lib/git'
-require 'lib/gitosis'
-require 'lib/util'
+require 'basic'
+require 'git'
+require 'gitosis'
+require 'util'
 
 
 
 module Project
 	Version			= "0.1.1"
-	TemplatesRoot	= "#{ENV['HOME']}/local/share/project/templates"
-	HooksRoot		= "#{ENV['HOME']}/local/share/project/after"
 
 	AllFilesPattern	= "{.,[a-zA-Z]}[a-zA-Z]*"
+
+	# Defaults
+	Share			= "#{File.dirname( File.dirname( __FILE__ ))}/share"
+	TemplatesRoot	= "#{Share}/templates"
+	GitosisConf		= "#{ENV['HOME']}/devel/.gitosis-admin/gitosis.conf"
 
 
 	SubCommands		= %w(
@@ -42,14 +46,21 @@ module Project
 			opt	:name,	"
 				The name of the project.  If unspecified, will default to DIR,
 				if relevant for the command
-			".oneline
+			".oneline,
+				:type		=> :string
 
 			opt :gitosis_conf, "
 				The location of .gitosis-conf, which also implies the location
 				of the gitosis directory.
 			".oneline,
 				:type		=> :string,
-				:default	=> "#{ENV['HOME']}/devel/.gitosis-admin/gitosis.conf"
+				:default	=> GitosisConf
+
+			opt	:templates_root, "
+				The location of templates to create projects from.
+			".oneline,
+				:type		=> :string,
+				:default	=> TemplatesRoot
 
 			stop_on	SubCommands
 		end
@@ -59,7 +70,20 @@ module Project
 		cmd_opts = Trollop::options do
 			case cmd
 			when "create"
+				banner "
+					project create DIRECTORY [TEMPLATE]
+
+					Create a project in DIRECTORY, initialized from TEMPLATE.
+					Create a git repository, add it to gitosis, and add as a
+					submodule to the nearest ancestor directory that is a git
+					repository (if one exists).
+
+					Options:
+				".cleanup
+
 			when "remove"
+				banner "Not implemented"
+
 			when "gitosis-list"
 				banner "
 					project gitosis-list [PATTERN]
@@ -69,9 +93,29 @@ module Project
 
 					Options:
 				".cleanup
+
 			when "gitosis-add"
+				banner "
+					project gitosis-add DIRECTORY
+
+					Add DIRECTORY to gitosis.
+
+					Options:
+				".cleanup
+
 			when "gitosis-remove"
+				banner "Not implemented"
+
 			when "submodulize"
+				banner "
+					project submodulize DIRECTORY
+
+					Add DIRECTORY as a submodule to its nearest ancestor that is
+					a git repository, if such an ancestor exists.
+
+					Options:
+				".cleanup
+
 			else
 				Trollop::die "No command specified" if cmd.nil?
 				Trollop::die "Unknown command #{cmd}"
@@ -79,14 +123,36 @@ module Project
 		end
 
 
+		opts = global_opts.merge( cmd_opts )
 		case cmd 
 		when "create"
+			directory, template = *ARGV
+			name = (opts[ :name ] ||= File.basename( directory ))
+
+			opts[ :push ] = true
+			Project::create( [directory, template], opts )
+			Project::Gitosis::add( name, directory, opts )
+
+			Project::Git::add_as_submodule( directory, opts )
+
 		when "remove"
+			Trollop::die "Not Implemented"
+
 		when "gitosis-list"
-			Project::Gitosis::list( ARGV, cmd_opts, global_opts )
+			Project::Gitosis::list( ARGV, opts )
+
 		when "gitosis-add"
+			directory, template = *ARGV
+			name = (opts[ :name ] ||= File.basename( directory ))
+			Project::Gitosis::add( name, directory, opts )
+
 		when "gitosis-remove"
+			Trollop::die "Not Implemented"
+
 		when "submodulize"
+			directory, template = *ARGV
+			Project::Git::add_as_submodule( directory, opts )
+
 		else
 			raise "Internal project error."
 		end

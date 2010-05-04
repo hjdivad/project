@@ -5,8 +5,8 @@ type: :feature
 component: project
 release: 
 reporter: David J. Hamilton <project@hjdivad.com>
-status: :unstarted
-disposition: 
+status: :closed
+disposition: :fixed
 creation_time: 2010-04-27 22:14:10.956773 Z
 references: []
 
@@ -16,5 +16,9 @@ log_events:
   - David J. Hamilton <project@hjdivad.com>
   - created
   - ""
+- - 2010-05-04 20:56:00.768398 Z
+  - David J. Hamilton <project@hjdivad.com>
+  - closed with disposition fixed
+  - Implemented.
 git_branch: 
 claimer: 

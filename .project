@@ -8,7 +8,7 @@ f = File.readlink( f ) if File.symlink?( f )
 __DIR__ = File.dirname( f )
 
 
-$LOAD_PATH.unshift __DIR__
+$LOAD_PATH.unshift "#{__DIR__}/lib"
 load "#{__DIR__}/lib/project.rb"
 
 

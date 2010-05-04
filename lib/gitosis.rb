@@ -1,29 +1,93 @@
 #!/usr/bin/env ruby
 
-require 'lib/util'
+require 'util'
 
 
 module Project; end
 module Project::Gitosis
 
-	class Conf < Struct.new( :groups )
+	class Conf < Struct.new( :groups, :path )
 		Group = ::Struct.new( :name, :members, :writable )
+
+		def self.line_type( line )
+			case line
+			when /\[group (\S*)\]/
+				yield :group, $1
+			when /\s*writable\s*=\s*(.*)/
+				yield :writable, $1
+			when /\s*members\s*=\s*(.*)/
+				yield :members, $1
+			end
+		end
 
 		def self.load( path )
 			group = nil
 			groups = []
 			File.new( path ).each_line do |line|
-				case line
-				when /\[group (\w*)\]/
-					groups << group = Group.new( $1, [], [] )
-				when /\s*writable\s*=\s*(.*)/
-					group.writable += $1.split( " " )
-				when /\s*members\s*=\s*(.*)/
-					group.members += $1.split( " " )
+				line_type( line ) do |type, v|
+					case type
+					when :group
+						groups << group = Group.new( v, [], [] )
+					when :writable
+						group.writable += v.split( " " )
+					when :members
+						group.members += v.split( " " )
+					end
 				end
 			end
 
-			Conf.new( groups )
+			Conf.new( groups, path )
+		end
+
+		def save!
+			# Groups to write
+			groups = self.groups.ddup
+			# current group
+			group = nil
+
+			# Read entire file into memory.
+			file = File.readlines( self.path ).map do |line|
+				Conf.line_type( line ) do |type, v|
+					case type
+					when :group
+						group = groups.find{|g| g.name == v}
+						groups.delete group unless group.nil?
+					when :writable
+						unless group.nil?
+							line = "writable = "
+							line << group.writable.sort.join( " " )
+						end
+					when :members
+						unless group.nil?
+							line = "members = "
+							line << group.members.sort.join( " " )
+						end
+					end
+				end
+
+				line.chomp!( "\n" )
+				line
+			end
+			
+			# FIXME 3: Doesn't write new groups
+			File.open( self.path, 'w' ){|f| f.puts( file.join( "\n" ))}
+		end
+
+		def add_writable!( path, group_name )
+			group = group!( group_name )
+			unless group.writable.find{|w| w == path }
+				group.writable << path
+			end
+		end
+
+		# Find group by name.  Create if none found.
+		def group!( name )
+			group = groups.find{|g| g.name == name}
+			if group.nil?
+				groups << group = Group.new( name, [], [] )
+			end
+
+			group
 		end
 
 
@@ -48,113 +112,51 @@ module Project::Gitosis
 
 
 	class << self
-		def list( args, cmd_opts, global_opts )
+		def list( args, opts )
 
 			pattern = *args
-			conf_path = global_opts[ :gitosis_conf ]
+			conf_path = opts[ :gitosis_conf ]
 
 			conf = Conf.load( conf_path )
 
 			puts conf.to_s( pattern )
 		end
-	end
-end
+
+		def add( name, directory, opts )
+			conf_path = opts[ :gitosis_conf ]
+			conf = Conf.load( conf_path )
+
+			group_name	= opts[ :group ] || 'projects'
+			path		= opts[ :path ] || 'projects'
+			full_path	= "#{path}/#{name}"
+			conf.add_writable!( full_path, group_name )
+			conf.save!
 
 
-module Gitosis
+			if( opts[ :push ])
+				# Commit changes to gitosis
+				gitosis_dir = File.dirname( conf_path )
+				system [
+					"cd #{gitosis_dir}",
+					"git commit --all -m 'Added project #{name}.'",
+					"git push",
+				].join( " && " )
 
-
-	################################################################ # {{{
-	# Finding what to edit in gitosis.conf
-
-	Project = "projects"
-	Prefix = "#{ENV['USER']}/projects"
-	
-	# }}}
-
-	################################################################
-
-	Url = "git@cerberus.hjdivad.com:#{Prefix}"
-end
-
-
-# Add entry +Gitosis::Prefix+/+name+ to gitosis.conf
-def update_gitosis_conf!( name )
-	config = File.readlines( Gitosis::Path )
-	File.open( Gitosis::Path, 'w' ) do |f|
-		# simple state machine: are we in [group project]?
-		in_project_group = false
-
-		config.each do |line|
-			if line =~ /\[group #{Gitosis::Project}\]/
-				in_project_group = true
-			elsif line =~ /\[group .*\]/
-				in_project_group = false
+				# Add the newly created remote as the origin
+				gitosis_url = (`
+					cd #{gitosis_dir} && 
+					git config remote.origin.url 
+				` =~ /(.*):/; $1)
+				system "
+					cd #{directory}
+					&& git remote | grep -q origin
+					|| git remote add origin #{gitosis_url}:#{full_path}
+					&& git config branch.master.remote origin
+					&& git config branch.master.merge refs/heads/master
+					&& git push origin master
+				".gsub( "\n", " " )
 			end
-
-			if in_project_group
-				if line =~ /^(\s*writable\s*=.*)\n/
-					line = "#{$1} #{Gitosis::Prefix}/#{name}"
-				end
-			end
-
-			f.print line
 		end
 	end
 end
-
-def commit_push_gitosis!( name )
-	system [
-		"cd #{Gitosis::Dir}",
-		"git commit --all -m 'Added project #{name}.'",
-		"git push",
-	].join( " && " )
-end
-
-def add_origin_to_repo!( name )
-	if File.directory? name
-		system [
-			"cd #{name}",
-			"git remote add origin #{Gitosis::Url}/#{name}",
-			"git config branch.master.remote origin",
-			"git config branch.master.merge refs/heads/master",
-			"git push origin master",
-		].join( " && " )
-	end
-end
-
-def command!( args )
-
-
-	opts = Trollop::options do
-		version			Version
-		banner "
-			Usage: setup-gitosis <dir> [<template>] [<hook-args>]
-
-			Creates directory <dir>, copied from
-			$HOME/local/share/project/templates/<template>, if given, and
-			initializes as a git repository with a single, empty, root commit. 
-
-			Runs $HOME/local/share/project/after/<template>/*, if any, passing in
-			<name> and <hook-args> as arguments.
-		".gsub( /^[ \t]+/, '' )
-
-		opt :name,		"Name of the project.  Defaults to <dir>.",
-			:type => :string
-		opt :namespace,	"Namespace to use in gitosis.  Defaults to 'project'.",
-			:type => :string
-	end
-
-	Trollop::die "<dir> is required." if ARGV.empty?
-
-
-	name = args.first
-
-	update_gitosis_conf!( name )
-	commit_push_gitosis!( name )
-	add_origin_to_repo!( name )
-end
-
-
-command!( ARGV ) if $0 == __FILE__
 

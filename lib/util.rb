@@ -10,3 +10,12 @@ class String
 		strip.gsub( /\n\s+/, '' )
 	end
 end
+
+
+class Object
+	# Deep duplicate via remarshaling.  Not always applicable.
+	def ddup
+		Marshal.load( Marshal.dump( self ))
+	end
+end
+

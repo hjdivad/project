@@ -2,9 +2,14 @@ History.txt
 lib/gitosis.rb
 lib/git.rb
 lib/basic.rb
+lib/util.rb
 lib/project.rb
 bin/project
 share/project-completion
+share/templates/lake/Rakefile
+share/templates/ruby/History.txt
+share/templates/ruby/Rakefile
+share/templates/ruby/README.txt
 Rakefile
 README.txt
 Manifest.txt
