@@ -1,8 +1,4 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Setup *.java.trans
-au BufRead,BufNewFile *.java.trans set ft=java
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Setup tabs and vimproject
 
 Project .vimproject

@@ -23,7 +23,7 @@ desc "Automatically update Manifest.txt"
 task :update_manifest do
 	File.open( './Manifest.txt', 'w' ) do |f|
 		f.puts(
-			Dir['**/**'].reject do |p|
+			(Dir['**/**'] + Dir['*/**/.[a-z]*']).uniq.reject do |p|
 				p =~ /^(pkg|tmp)/
 			end.reject do |p|
 				File.directory? p
