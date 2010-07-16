@@ -1,66 +1,81 @@
-#!/usr/bin/env ruby
-
-__DIR__ = File.dirname( __FILE__ )
-
-
-require 'fileutils'
+require 'yaml'
 
 require 'rubygems'
-require 'hoe'
-require 'spec'
-require 'spec/rake/spectask'
+require 'rake'
+
+Dir[ 'lib/tasks/**/*' ].each{ |l| require l }
 
 
-Hoe.spec 'project' do
-	developer( 'David JH', 'davidjh@hjdivad.com' )
+begin
+  require 'jeweler'
+  Jeweler::Tasks.new do |gem|
+    gem.name = "project"
+    gem.summary = %Q{create projects}
+    gem.description = %Q{create projects}
+    gem.email = "project@hjdivad.com"
+    gem.homepage = "http://example.com"
+    gem.authors = ["David J. Hamilton"]
 
-	self.version = "0.0.2"
-	# self.rubyforge_name = 'project'
+    if File.exists? 'Gemfile'
+      require 'bundler'
+      bundler = Bundler.load
+      bundler.dependencies_for( :runtime ).each do |dep|
+        gem.add_dependency              dep.name, dep.requirement.to_s
+      end
+      bundler.dependencies_for( :development ).each do |dep|
+        gem.add_development_dependency  dep.name, dep.requirement.to_s
+      end
+    end
+    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
+  end
+rescue LoadError
+  puts "Jeweler (or a dependency) not available. Install it with: gem install jeweler"
 end
 
 
-desc "Automatically update Manifest.txt"
-task :update_manifest do
-	File.open( './Manifest.txt', 'w' ) do |f|
-		f.puts(
-			(Dir['**/**'] + Dir['*/**/.[a-z]*']).uniq.reject do |p|
-				p =~ /^(pkg|tmp)/
-			end.reject do |p|
-				File.directory? p
-			end.join( "\n" )
-		)
-	end
+desc "Write out build version.  You must supply BUILD."
+task 'version:write:build' do
+  unless ENV.has_key? 'BUILD'
+    abort "Must supply BUILD=<build> to write out build version number." 
+  end
+  y = YAML::load_file( "VERSION.yml" )
+  v = {
+    :major => 0, :minor => 0, :patch => 0, :build => 0
+  }
+  v.merge!( y ) if y.is_a? Hash
+  v[ :build ] = ENV['BUILD']
+  File.open( "VERSION.yml", "w" ){|f| f.puts YAML::dump( v )}
+end
+
+task 'version:bump:build' do
+  y = YAML::load_file( "VERSION.yml" )
+  v = {
+    :major => 0, :minor => 0, :patch => 0, :build => 0
+  }
+  v.merge!( y ) if y.is_a? Hash
+
+  raise "Can't bump build: not a number" unless v[:build].is_a? Numeric
+  v[ :build ] += 1
+
+  v.each{|k,v| ENV[ k.to_s.upcase ] = v.to_s}
+  Rake::Task["version:write"].invoke
 end
 
 
-# Spec ################################################################ {{{
-
-$append_spec_opts = ''
-
-namespace :spec do
-
-	Spec::Rake::SpecTask.new( :run_spec ) do |t|
-		t.spec_opts = proc do
-			[ "--color --format specdoc #{$append_spec_opts}" ]
-		end
-	end
-
-	task :spec, [ :spec_to_run ] do |t, args|
-		$append_spec_opts = "-e #{args.spec_to_run}" unless args.spec_to_run.nil?
-		Rake.application.invoke_task( "spec:run_spec" )
-	end
-
+desc "Run all specs."
+task :spec do
+  # Jeweler messes up specs by polluting ENV
+  ENV.keys.grep( /git/i ).each{|k| ENV.delete k }
+  sh "rspec spec"
 end
 
-desc "Run specs.  If +spec_to_run+ is specified, run only that spec."
-task :spec, [ :spec_to_run ] => "spec:spec"
 
-# }}}
-
-
-
-
-
-
-# vim: syntax=ruby
-
+begin
+  require 'yard'
+  YARD::Rake::YardocTask.new
+rescue LoadError
+  desc "Try (and fail) to run yardoc to get an error message."
+  task :yard do
+    abort "YARD is not available. In order to run yardoc, you must: sudo gem install yard"
+  end
+end

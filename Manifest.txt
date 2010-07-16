@@ -1,3 +1,4 @@
+Gemfile
 History.txt
 lib/gitosis.rb
 lib/git.rb
@@ -8,16 +9,19 @@ bin/project
 share/project-completion
 share/templates/lake/Rakefile
 share/templates/ruby/README.rdoc
+share/templates/ruby/Gemfile
 share/templates/ruby/LICENSE
 share/templates/ruby/Rakefile
 share/templates/ruby/features/project.feature
 share/templates/ruby/features/support/env.rb
 share/templates/ruby/spec/spec_helper.rb
-share/templates/ruby/spec/spec.opts
 Rakefile
 README.txt
 Manifest.txt
+Gemfile.lock
 share/templates/lake/.vimproject
 share/templates/lake/.gvimrc
 share/templates/ruby/.vimproject
+share/templates/ruby/.rvmrc
 share/templates/ruby/.gvimrc
+share/templates/ruby/.rspec

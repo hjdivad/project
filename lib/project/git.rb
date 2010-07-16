@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'util'
+require 'project/util'
 
 module Project; end
 module Project::Git
