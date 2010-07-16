@@ -1,9 +1,10 @@
 require 'cgi'
+require 'yaml'
 
 module Project; end
 module Project::Github
 
-  def self.gitosis_create( name, user, token )
+  def self.github_create( name, user, token )
     path = "/api/v2/yaml/repos/create"
     params = {
       :name         => name,
@@ -12,6 +13,7 @@ module Project::Github
       :login        => user,
       :token        => token,
     }
+    post( path, params )
   end
 
   def self.add( name, directory, opts={} )
@@ -36,7 +38,7 @@ module Project::Github
     res = nil
     http.start do
       req = Net::HTTP::Post.new( path )
-      req.body = params.map{|k,v| "#{CGI.escape k}=#{CGI.escape v}"}.join("&")
+      req.body = params.map{|k,v| "#{CGI.escape k.to_s}=#{CGI.escape v.to_s}"}.join("&")
       res = YAML.load http.request( req ).body
     end
 

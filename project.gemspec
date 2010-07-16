@@ -47,6 +47,7 @@ Gem::Specification.new do |s|
      "lib/project/github.rb",
      "lib/project/gitosis.rb",
      "lib/project/util.rb",
+     "project.gemspec",
      "share/project-completion",
      "share/templates/lake/.gvimrc",
      "share/templates/lake/.vimproject",

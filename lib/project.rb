@@ -140,7 +140,7 @@ module Project
       unless opts[:github]
         Project::Gitosis::add( name, directory, opts )
       else
-        Projects::Github::add( name, directory, opts )
+        Project::Github::add( name, directory, opts )
       end
       
       Project::Git::add_as_submodule( directory, opts )
