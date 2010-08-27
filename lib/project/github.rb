@@ -1,4 +1,5 @@
 require 'cgi'
+require 'net/http'
 require 'yaml'
 
 module Project; end

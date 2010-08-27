@@ -11,7 +11,12 @@ require 'project/util'
 
 
 module Project
-  Version     = "0.1.1"
+  Version = lambda {
+    h = YAML::load_file( "#{File.dirname( __FILE__ )}/../VERSION.yml" )
+    if h.is_a? Hash
+      [h[:major], h[:minor], h[:patch], h[:build]].compact.join( "." )
+    end
+  }.call
 
   AllFilesPattern = "{.,[a-zA-Z]}[a-zA-Z]*"
 
