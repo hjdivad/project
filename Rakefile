@@ -1,6 +1,7 @@
 require 'yaml'
 
 require 'rubygems'
+require 'project/tasks'
 require 'rake'
 
 Dir[ 'lib/tasks/**/*' ].each{ |l| require l }
@@ -11,7 +12,7 @@ begin
   Jeweler::Tasks.new do |gem|
     gem.name = "project"
     gem.summary = %Q{create projects}
-    gem.description = %Q{create projects}
+    gem.description = %Q{create projects, either on gitosis or github.}
     gem.email = "project@hjdivad.com"
     gem.homepage = "http://example.com"
     gem.authors = ["David J. Hamilton"]
@@ -30,35 +31,6 @@ begin
   end
 rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: gem install jeweler"
-end
-
-
-desc "Write out build version.  You must supply BUILD."
-task 'version:write:build' do
-  unless ENV.has_key? 'BUILD'
-    abort "Must supply BUILD=<build> to write out build version number." 
-  end
-  y = YAML::load_file( "VERSION.yml" )
-  v = {
-    :major => 0, :minor => 0, :patch => 0, :build => 0
-  }
-  v.merge!( y ) if y.is_a? Hash
-  v[ :build ] = ENV['BUILD']
-  File.open( "VERSION.yml", "w" ){|f| f.puts YAML::dump( v )}
-end
-
-task 'version:bump:build' do
-  y = YAML::load_file( "VERSION.yml" )
-  v = {
-    :major => 0, :minor => 0, :patch => 0, :build => 0
-  }
-  v.merge!( y ) if y.is_a? Hash
-
-  raise "Can't bump build: not a number" unless v[:build].is_a? Numeric
-  v[ :build ] += 1
-
-  v.each{|k,v| ENV[ k.to_s.upcase ] = v.to_s}
-  Rake::Task["version:write"].invoke
 end
 
 

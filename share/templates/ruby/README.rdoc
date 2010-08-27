@@ -1,8 +1,23 @@
 = TODO 1: GEMNAME
 
+* Author:     David J. Hamilton
+* Homepage:   http://github.com/hjdivad/<project-name>
+* Issues:     http://github.com/hjdivad/<project-name>/issues
+
 Description goes here.
 
-== Note on Patches/Pull Requests
+
+= Requirements
+
+
+= Installation
+
+
+= Usage
+
+
+
+= Note on Patches/Pull Requests
  
 * Fork the project.
 * Make your feature addition or bug fix.
@@ -12,6 +27,10 @@ Description goes here.
   (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
 * Send me a pull request. Bonus points for topic branches.
 
-== Copyright
+
+= Thanks &c.
+
+
+= Copyright
 
 Copyright (c) 2010 David J. Hamilton. See LICENSE for details.

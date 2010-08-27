@@ -9,9 +9,9 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["David J. Hamilton"]
-  s.date = %q{2010-07-15}
+  s.date = %q{2010-08-27}
   s.default_executable = %q{project}
-  s.description = %q{create projects}
+  s.description = %q{create projects, either on gitosis or github.}
   s.email = %q{project@hjdivad.com}
   s.executables = ["project"]
   s.extra_rdoc_files = [
@@ -30,12 +30,11 @@ Gem::Specification.new do |s|
      ".ditz/project.yaml",
      ".gitignore",
      ".gvimrc",
-     ".project",
      ".rvmrc",
      ".vimproject",
      "Gemfile",
      "Gemfile.lock",
-     "History.txt",
+     "History.rdoc",
      "Manifest.txt",
      "README.txt",
      "Rakefile",
@@ -59,14 +58,15 @@ Gem::Specification.new do |s|
      "share/templates/ruby/.vim/plugin/.gitignore",
      "share/templates/ruby/.vimproject",
      "share/templates/ruby/Gemfile",
+     "share/templates/ruby/History.rdoc",
      "share/templates/ruby/LICENSE",
      "share/templates/ruby/README.rdoc",
      "share/templates/ruby/Rakefile",
      "share/templates/ruby/VERSION.yml",
+     "share/templates/ruby/autotest/discover.rb",
      "share/templates/ruby/features/project.feature",
      "share/templates/ruby/features/support/env.rb",
-     "share/templates/ruby/spec/spec_helper.rb",
-     "tmp/project"
+     "share/templates/ruby/spec/spec_helper.rb"
   ]
   s.homepage = %q{http://example.com}
   s.rdoc_options = ["--charset=UTF-8"]
@@ -83,17 +83,20 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<jeweler>, [">= 1.4.0"])
       s.add_development_dependency(%q<rake>, [">= 0"])
       s.add_development_dependency(%q<rspec>, ["= 1.3.0"])
+      s.add_development_dependency(%q<project>, ["~> 0.1"])
     else
       s.add_dependency(%q<trollop>, [">= 0"])
       s.add_dependency(%q<jeweler>, [">= 1.4.0"])
       s.add_dependency(%q<rake>, [">= 0"])
       s.add_dependency(%q<rspec>, ["= 1.3.0"])
+      s.add_dependency(%q<project>, ["~> 0.1"])
     end
   else
     s.add_dependency(%q<trollop>, [">= 0"])
     s.add_dependency(%q<jeweler>, [">= 1.4.0"])
     s.add_dependency(%q<rake>, [">= 0"])
     s.add_dependency(%q<rspec>, ["= 1.3.0"])
+    s.add_dependency(%q<project>, ["~> 0.1"])
   end
 end
 

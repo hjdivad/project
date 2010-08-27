@@ -1,11 +1,5 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Setup *.java.trans
-au BufRead,BufNewFile *.java.trans set ft=java
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Setup tabs and vimproject
-
-Project .vimproject
+" Setup tabs
 
 tabnew
 tabnew
@@ -17,9 +11,10 @@ tabnew
 tabnew
 tabnew
 
-tabdo Project
-tabdo wincmd l
 tabdo wincmd n
+tabdo wincmd =
 
 1tabn
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+winpos 600 25
