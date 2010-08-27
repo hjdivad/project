@@ -45,6 +45,8 @@ Gem::Specification.new do |s|
      "lib/project/git.rb",
      "lib/project/github.rb",
      "lib/project/gitosis.rb",
+     "lib/project/tasks.rb",
+     "lib/project/tasks/versioning.rake",
      "lib/project/util.rb",
      "project.gemspec",
      "share/project-completion",
